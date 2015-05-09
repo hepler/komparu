@@ -7,3 +7,11 @@ body {
     font-weight: bold;
     margin: 0;
 }
+
+.view {
+  margin-top: 5em;
+}
+
+#blah {
+  padding-left: 5em;
+}
