@@ -5,7 +5,7 @@ class GenderGuesserAPI:
     def get_scores(self, a, b):
         score_a = self.get_score(a)
         score_b = self.get_score(b)
-        return {a: score_a, b: score_b}
+        return {a: score_a, b: score_b}, "Gender Guesser"
 
     def get_score(self, item):
         response = unirest.get(

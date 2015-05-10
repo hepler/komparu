@@ -9,12 +9,12 @@ class ThesaurusAPI:
         total = count_a + count_b
 
         if total == 0:
-            return {a: 0.0, b: 0.0}
+            return {a: 0.0, b: 0.0}, "Thesaurus"
 
         ratio_a = count_a * 1.0 / total
         ratio_b = count_b * 1.0 / total
 
-        return {a: 1.0 + ratio_a, b: 1.0 + ratio_b}
+        return {a: 1.0 + ratio_a, b: 1.0 + ratio_b}, "Thesaurus"
 
     def get_score(self, item):
         response = unirest.get(
