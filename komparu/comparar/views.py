@@ -29,8 +29,8 @@ def index(request):
     # if user entered items, use them
     if request.method == "POST":
         title = ' RESULTS...'
-        item_left = request.POST['input_left']
-        item_right = request.POST['input_right']
+        item_left = request.POST['input_left'].title()
+        item_right = request.POST['input_right'].title()
         stats = CALCULATOR.get_scores(item_left, item_right)
 
     # get the Amazon URL for whichever item is better, tell the view who is the queen/king
