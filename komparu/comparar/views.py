@@ -5,6 +5,7 @@ from django.shortcuts import render
 import urllib2
 import urllib
 import json
+from random import randint
 
 # APIs
 from angelList import AngelListAPI
@@ -95,9 +96,11 @@ def getImage(item):
     # replace whitepace for use in URL
     item = item.replace(' ', '%20')
     try:
+        random_index = randint(0, 10)
         # query on the item, grab the url for the first image result
         query_builder = urllib2.build_opener()
-        search_result_index = '0'
+
+        search_result_index = str(random_index)
         search_query = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + item + '&start=' + search_result_index
         query_results = query_builder.open(search_query)
         deserialized_output = json.load(query_results)
