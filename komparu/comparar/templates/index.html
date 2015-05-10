@@ -24,7 +24,14 @@
 			<p>
         everything you don't want to know about anything
       </p>
-			<a class="btn btn-primary btn-large" href="#">compare some stuff</a>
+
+
+      <form method="POST" class="input-items">
+          {% csrf_token %}
+          <input name="input_left" placeholder="compare this"></input>
+          <input name="input_right" placeholder="with this"></input>
+          <input type="submit" value="compare some stuff" class="btn btn-primary btn-large">
+      </form>
 		</div>
 	</div>
    <br/>
