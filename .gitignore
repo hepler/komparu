@@ -68,4 +68,5 @@ target/
 
 .idea/
 
-venv
+*venv*
+*.pyc
