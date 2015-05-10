@@ -22,7 +22,7 @@
 	<div class="view">
 		<div class="jumbotron" id="blah" contenteditable="false">
 
-    <div class="logo"> 
+    <div class="logo">
       <img src="{% static "logo.jpg" %}" alt="Logo"/>
     </div>
 			<h2>
@@ -32,7 +32,7 @@
 
       <form method="POST" class="input-items">
           {% csrf_token %}
-          <div class="row top-buffer"> 
+          <div class="row top-buffer">
             <input class="col-md-2 left-buffer" name="input_left" placeholder="compare this"></input>
             <input class="col-md-2 left-buffer" name="input_right" placeholder="with this"></input>
             <input class="col-md-2 left-buffer" type="submit" value="comparify" class="btn btn-primary btn-large">
@@ -58,7 +58,7 @@
   <div class="center" id="amazon">
     <h1>{{winner}}s are {{difference}}% better than {{loser}}s!</h1>
       <h4>
-          <button class="btn-primary" href="{{amazon_url}}">Buy {{winner}}s on Amazon!</button>
+          <a href="{{amazon_url}}" target="_blank"><button class="btn-primary">Buy {{winner}}s on Amazon!</button></a>
       </h4>
   </div>
 
