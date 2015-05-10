@@ -45,7 +45,7 @@ def index(request):
             winner = item_right
             loser = item_left
             amazon_url = getAmazonURL(item_right)
-
+        difference = int(stats['difference'] * 100)
         # now find images for them
         image_left = getImage(item_left)
         image_right = getImage(item_right)
@@ -74,7 +74,8 @@ def index(request):
             'amazon_url': amazon_url,
             'stats': stats,
             'winner': winner,
-            'loser': loser
+            'loser': loser,
+            'difference': difference
         })
 
     # if there's no POST then return blank index

@@ -5,6 +5,7 @@
   <title>...comparar{{title}}</title>
 
   {% load staticfiles %}
+  {% load app_filters %}
 
   <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
 
@@ -12,6 +13,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
 </head>
 
@@ -53,9 +55,8 @@
       </div>
     </div>
   </section>
-
   <div class="center" id="amazon">
-    <h1>{{winner}}s are X% better than {{loser}}s!</h1>
+    <h1>{{winner}}s are {{difference}}% better than {{loser}}s!</h1>
       <h4>
           <button class="btn-primary" href="{{amazon_url}}">Buy {{winner}}s on Amazon!</button>
       </h4>
@@ -66,58 +67,59 @@
   <section class="container-fluid vertical-center center">
   <div id="results" class="lead">
     <h2>How We Determine Worth</h2>
-    
+
     <p class="row top-buffer"> The Twitter sentiment for
-      <strong>{{winner}}</strong> is X.
-      <strong>{{loser}}&#39s</strong> is Y.
+      <strong>{{winner}}</strong> is {{ stats.results|get_winner_item:"Twitter Sentiment" }}.
+      <strong>{{loser}}&#39s</strong> is {{ stats.results|get_loser_item:"Twitter Sentiment" }}.
     </p>
     <em class="small"> More extreme sentiment, regardless of whether sentiment was positive, meant higher scores, because
-      <strong>passion.</strong> 
+      <strong>passion.</strong>
     </em>
 
     <p class="row top-buffer"> Gender guesser guessed that
-      <strong>{{winner}}</strong> is a X, and that
-      <strong>{{loser}}</strong> is a Y.
+      <strong>{{winner}}</strong> is a {{ stats.results|get_winner_item:"Gender Guesser" }}, and that
+      <strong>{{loser}}</strong> is a {{ stats.results|get_loser_item:"Gender Guesser" }}.
     </p>
     <em class="small"> Being a female gives you a 150% kicker because,
       <strong>diversity.</strong>
     </em>
 
     <p class="row top-buffer">
-      <strong>{{winner}}</strong> has X synonyms,
-      <strong>{{loser}}</strong> has Y.
+      <strong>{{winner}}</strong> has {{ stats.results|get_winner_item:"Thesaurus" }} synonyms and antonyms,
+      <strong>{{loser}}</strong> has {{ stats.results|get_loser_item:"Thesaurus" }}.
     </p>
-    <em class="small"> More synonyms amplified
+    <em class="small"> More synonyms and antonyms amplified
       <strong>{{winner}}&#39s</strong> score, because
-      <strong>ubiquity.</strong>
+      <strong>ubiquity.</strong> And because <strong>disruptive.</strong>
     </em>
-
-    <p class="row top-buffer">
-      <strong>{{winner}}</strong> has X synonyms,
+    <!-- <p>
+      <strong>{{winner}}</strong> has X antonyms,
       <strong>{{loser}}</strong> has Y.
     </p>
     <em class="small"> More antonyms amplified
       <strong>{{winner}}&#39s</strong> score, because
-      <strong>disruptive.</strong> 
-    </em>
+      <strong>disruptive.</strong>
+    </em> -->
 
-    <p class="row top-buffer"> Angellist notes X startups related to
-      <strong>{{winner}}</strong>, versus Y for
-      <strong>{{loser}}</strong>. </p>
+    <p class="row top-buffer"> Angellist notes {{ stats.results|get_winner_item:"Angel List" }} startups related to
+      <strong>{{winner}}</strong>, versus {{ stats.results|get_loser_item:"Angel List" }} for
+      <strong>{{loser}}</strong>.
+    </p>
+    </p>
     <em class="small"> More startups means a higher score, because
-      <strong>buzz.</strong> 
+      <strong>buzz.</strong>
     </em>
 
     <p class="row top-buffer"> The top 40 Google Books on the subject of
       <strong>{{winner}}</strong>.
     </p>
     <em class="small"> More pages means a higher score, because
-      <strong>verbosity.</strong>  
+      <strong>verbosity.</strong>
     </em>
 
     <p class="row top-buffer"> Finally,
-      <strong>{{winner}}</strong> turns up X results on Google, while
-      <strong>{{loser}}</strong> turns up only Y.
+      <strong>{{winner}}</strong> turns up {{ stats.results|get_winner_item:"Google Search" }} results on Google, while
+      <strong>{{loser}}</strong> turns up only {{ stats.results|get_loser_item:"Google Search" }}.
     </p>
     <em class="small"> More results on Google means a higher score, because
       <strong>big data.</strong>

@@ -23,7 +23,10 @@ class Calculator:
         a_product = self.get_item_product(results, a)
         b_product = self.get_item_product(results, b)
 
-        return {a: a_product, b: b_product, "results": self.map_results(results, a, b)}
+        max_product = max(a_product, b_product)
+        min_product = min(a_product, b_product)
+
+        return {a: a_product, b: b_product, "difference": max_product - min_product, "results": self.map_results(results, a, b)}
 
     def score_append(self, results, api, a, b):
         results.append(api.get_scores(a, b))
@@ -43,7 +46,17 @@ class Calculator:
         for scores in results:
             score_a = scores[1][a]
             score_b = scores[1][b]
-            winner = a if score_a >= score_b else b
+            if score_a >= score_b:
+                winner = a
+                loser = b
+            else:
+                winner = b
+                loser = a
 
-            results_map[scores[0]] = {"scores": scores[1], "sanitized": scores[2], "winner": winner}
+            results_map[scores[0]] = {
+                "scores": scores[1],
+                "sanitized": scores[2],
+                "winner": winner,
+                "loser": loser
+            }
         return results_map
