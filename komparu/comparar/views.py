@@ -18,14 +18,29 @@ def index(request):
     title = '...'
     item_left = 'doge'
     item_right = 'dolphin'
-    stats = [None]
+    stats = None
+    amazon_url = None
+    winner = None
+    loser = None
 
     # if user entered items, use them
     if request.method == "POST":
         title = ' RESULTS...'
         item_left = request.POST['input_left']
         item_right = request.POST['input_right']
-        stats = aggregateScores(item_left, item_right)
+        stats = CALCULATOR.get_scores(item_left, item_right)
+
+    # get the Amazon URL for whichever item is better, tell the view who is the queen/king
+    if stats:
+        if stats[item_left] >= stats[item_right]:
+            winner = item_left
+            loser = item_right
+            amazon_url = getAmazonURL(item_left)
+        else:
+            winner = item_right
+            loser = item_left
+            amazon_url = getAmazonURL(item_right)
+
 
     # now find images for them
     image_left = getImage(item_left)
@@ -37,7 +52,10 @@ def index(request):
         'item_right': item_right,
         'image_left': image_left,
         'image_right': image_right,
-        'stats': stats
+        'amazon_url': amazon_url,
+        'stats': stats,
+        'winner': winner,
+        'loser': loser
     })
 
 
@@ -65,54 +83,75 @@ def getImage(item):
     return image_url
 
 
-def aggregateScores(item_left, item_right):
-        """ Returns list of scores from the API requests.
+def getAmazonURL(item):
+    """
+    A utility for retrieving the Amazon search results URL for some item.
+    """
 
-        Parameters
-        ----------
-        item_left: string
-            the left side search term from the user
-        item_right: string
-            the right side search term from the user
-        """
-        angel_list = AngelListAPI().get_scores(item_left, item_right)
-        gender_guesser = GenderGuesserAPI().get_scores(item_left, item_right)
-        google_books = GoogleBooksAPI().get_scores(item_left, item_right)
-        # google_results = GoogleResultsAPI().get_scores(item_left, item_right)
-        thesaurus = ThesaurusAPI().get_scores(item_left, item_right)
-        tweet_sentiment = TweetSentimentAPI().get_scores(item_left, item_right)
+    return "http://www.amazon.com/s?field-keywords={0}".format(urllib.quote_plus(item))
 
-        scores = [
-            angel_list,
-            gender_guesser,
-            google_books,
-            # google_results,
-            thesaurus,
-            tweet_sentiment
-        ]
 
-        return scores
+class Calculator:
+
+    def __init__(self, apis):
+        self.apis = apis
+
+    def get_scores(self, a, b):
+        results = []
+        threads = []
+
+        for api in self.apis:
+            thread = threading.Thread(target=self.score_append, args=(results, api, a, b))
+            threads.append(thread)
+
+        for t in threads:
+            t.start()
+
+        for t in threads:
+            t.join()
+
+        a_product = self.get_item_product(results, a)
+        b_product = self.get_item_product(results, b)
+
+        return {a: a_product, b: b_product, "results": self.map_results(results)}
+
+    def score_append(self, results, api, a, b):
+        results.append(api.get_scores(a, b))
+
+    def get_item_product(self, results, item):
+        item_scores = [scores[1][item] for scores in results]
+
+        for i, score in enumerate(item_scores):
+            # shh no zeroes, only penalties now
+            if score == 0.0:
+                item_scores[i] = 0.5
+
+        return reduce(operator.mul, item_scores, 1)
+
+    def map_results(self, results):
+        results_map = {}
+        for scores in results:
+            results_map[scores[0]] = {"scores": scores[1], "sanitized": scores[2]}
+        return results_map
+
 
 
 # API calls listed here:
 
 class AngelListAPI:
     def get_scores(self, a, b):
-        count_a = self.get_score(a)
-        count_b = self.get_score(b)
+        count_a = self.get_count(a)
+        count_b = self.get_count(b)
 
         total = count_a + count_b
 
-        if total == 0:
-            return {a: 0.0, b: 0.0}, "Angel List"
-
-        adjusted_ratio_a = count_a * 1.0 / total / 10
-        adjusted_ratio_b = count_b * 1.0 / total / 10
+        score_a = self.get_score(total, count_a)
+        score_b = self.get_score(total, count_b)
 
         # more startups means you're probably worse
-        return {a: 1.0 - adjusted_ratio_a, b: 1.0 - adjusted_ratio_b}, "Angel List"
+        return "Angel List", {a: score_a, b: score_b}, {a: count_a, b: count_b}
 
-    def get_score(self, item):
+    def get_count(self, item):
         response = unirest.get(
             "https://api.angel.co/1/search?query={0}&type=Startup".format(
                 urllib.quote_plus(item))
@@ -123,16 +162,26 @@ class AngelListAPI:
         if not results:
             return 0
         else:
+            # number of startups
             return len(results)
+
+    def get_score(self, total, count):
+        if total == 0:
+            return 1.0
+
+        return 1.0 - (count / total / 10.0)
 
 
 class GenderGuesserAPI:
     def get_scores(self, a, b):
-        score_a = self.get_score(a)
-        score_b = self.get_score(b)
-        return {a: score_a, b: score_b}, "Gender Guesser"
+        gender_a = self.get_gender(a)
+        gender_b = self.get_gender(b)
 
-    def get_score(self, item):
+        score_a = self.get_score(gender_a)
+        score_b = self.get_score(gender_b)
+        return "Gender Guesser", {a: score_a, b: score_b}, {a: str(gender_a), b: str(gender_b)}
+
+    def get_gender(self, item):
         response = unirest.get(
             "https://montanaflynn-gender-guesser.p.mashape.com/?name={0}".format(
                 urllib.quote_plus(item)),
@@ -143,11 +192,12 @@ class GenderGuesserAPI:
         )
 
         try:
-            gender = response.body["gender"]
+            return response.body["gender"]
         except:
             # no gender response (or any error) means neutral
-            return 1.0
+            return None
 
+    def get_score(self, gender):
         if not gender:
             return 1.0
         elif gender == "female":
@@ -161,16 +211,16 @@ class GenderGuesserAPI:
 
 class GoogleBooksAPI:
     def get_scores(self, a, b):
-        count_a = self.get_score(a)
-        count_b = self.get_score(b)
+        count_a = self.get_pages(a)
+        count_b = self.get_pages(b)
 
-        score_a = 1.0 + count_a / 10000.0
-        score_b = 1.0 + count_b / 10000.0
+        score_a = self.get_score(count_a)
+        score_b = self.get_score(count_b)
 
         # more pages, more better
-        return {a: score_a, b: score_b}, "Google Books"
+        return "Google Books", {a: score_a, b: score_b}, {a: count_a, b: count_b}
 
-    def get_score(self, item):
+    def get_pages(self, item):
         response = unirest.get(
             "https://www.googleapis.com/books/v1/volumes?q={0}&maxResults=40".format(
                 urllib.quote_plus(item))
@@ -183,6 +233,9 @@ class GoogleBooksAPI:
         else:
             return sum(volume["volumeInfo"].get("pageCount", 0.0) for volume in results.get("items"))
 
+    def get_score(self, count):
+        return 1.0 + count / 10000.0
+
 
 class GoogleResultsAPI:
     cats = float(134000000) # number of cats this metric finds
@@ -191,11 +244,14 @@ class GoogleResultsAPI:
         results_a = self.get_results(a)
         results_b = self.get_results(b)
 
-        return {a: GoogleResults.calculate_score(results_a), b: GoogleResults.calculate_score(results_b)}, "Google Search"
+        score_a = GoogleResultsAPI.calculate_score(results_a)
+        score_b = GoogleResultsAPI.calculate_score(results_b)
+
+        return "Google Search", {a: score_a, b: score_b}, {a: results_a, b: results_b}
 
     @staticmethod
     def calculate_score(results):
-        return (results - GoogleResults.cats) / GoogleResults.cats + 1
+        return (results - GoogleResultsAPI.cats) / GoogleResultsAPI.cats + 1
 
     @staticmethod
     def get_results(item):
@@ -212,20 +268,18 @@ class GoogleResultsAPI:
 
 class ThesaurusAPI:
     def get_scores(self, a, b):
-        count_a = self.get_score(a)
-        count_b = self.get_score(b)
+        count_a = self.get_count(a)
+        count_b = self.get_count(b)
 
         total = count_a + count_b
 
-        if total == 0:
-            return {a: 0.0, b: 0.0}, "Thesaurus"
+        score_a = self.get_score(total, count_a)
+        score_b = self.get_score(total, count_b)
 
-        ratio_a = count_a * 1.0 / total
-        ratio_b = count_b * 1.0 / total
+        # the sanitized output here does not yet differentiate between synonyms and antonyms
+        return "Thesaurus", {a: score_a, b: score_b}, {a: count_a, b: count_b}
 
-        return {a: 1.0 + ratio_a, b: 1.0 + ratio_b}, "Thesaurus"
-
-    def get_score(self, item):
+    def get_count(self, item):
         response = unirest.get(
             "http://words.bighugelabs.com/api/2/1992b053499e0716fe1b8308c5c40727/{0}/json".format(
                 urllib.quote_plus(item)))
@@ -249,12 +303,21 @@ class ThesaurusAPI:
                 lists.append(body[tense].get(key))
         return lists
 
+    def get_score(self, total, count):
+        if total == 0:
+            # this originally was 0.0, do I mean to change this or is it just 1:12am?
+            return 1.0
+
+        return 1.0 + (count * 1.0 / total)
+
 
 class TweetSentimentAPI:
     def get_scores(self, a, b):
         score_a = self.get_score(a)
         score_b = self.get_score(b)
-        return {a: score_a, b: score_b}, "Twitter Sentiment"
+
+        # this sanitized output does not differ from the calculated score
+        return "Twitter Sentiment", {a: score_a, b: score_b}, {a: score_a, b: score_b}
 
     def get_score(self, item):
         response = unirest.get(
@@ -267,3 +330,14 @@ class TweetSentimentAPI:
         )
 
         return math.fabs(response.body["score"])
+
+
+angelListAPI = AngelListAPI()
+genderGuesserAPI = GenderGuesserAPI()
+googleBooksAPI = GoogleBooksAPI()
+googleResultsAPI = GoogleResultsAPI()
+thesaurusAPI = ThesaurusAPI()
+tweetSentimentAPI = TweetSentimentAPI()
+
+APIS = [angelListAPI, genderGuesserAPI, googleBooksAPI, googleResultsAPI, thesaurusAPI, tweetSentimentAPI]
+CALCULATOR = Calculator(APIS)
