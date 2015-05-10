@@ -7,6 +7,10 @@ class ThesaurusAPI:
         count_b = self.get_score(b)
 
         total = count_a + count_b
+
+        if total == 0:
+            return {a: 0.0, b: 0.0}
+
         ratio_a = count_a * 1.0 / total
         ratio_b = count_b * 1.0 / total
 
