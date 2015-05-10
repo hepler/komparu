@@ -15,7 +15,7 @@ def get_loser_item(dictionary, api):
     sanitized = here['sanitized']
     return sanitized[here['loser']]
 
-# @register.filter(name='get_win_percent')
-# def get_win_percent(dictionary):
-#     win_percent = dictionary['win_percent']
-#     return win_percent
+@register.filter(name='get_win_percent')
+def get_win_percent(dictionary):
+    win_percent = dictionary['win_percent']
+    return win_percent
