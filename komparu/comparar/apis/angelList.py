@@ -9,13 +9,13 @@ class AngelListAPI:
         total = count_a + count_b
 
         if total == 0:
-            return {a: 0.0, b: 0.0}
+            return {a: 0.0, b: 0.0}, "Angel List"
 
         adjusted_ratio_a = count_a * 1.0 / total / 10
         adjusted_ratio_b = count_b * 1.0 / total / 10
 
         # more startups means you're probably worse
-        return {a: 1.0 - adjusted_ratio_a, b: 1.0 - adjusted_ratio_b}
+        return {a: 1.0 - adjusted_ratio_a, b: 1.0 - adjusted_ratio_b}, "Angel List"
 
     def get_score(self, item):
         response = unirest.get(

@@ -8,7 +8,7 @@ class GoogleResults:
         results_a = self.get_results(a)
         results_b = self.get_results(b)
 
-        return {a: GoogleResults.calculate_score(results_a), b: GoogleResults.calculate_score(results_b)}
+        return {a: GoogleResults.calculate_score(results_a), b: GoogleResults.calculate_score(results_b)}, "Google Search"
 
     @staticmethod
     def calculate_score(results):

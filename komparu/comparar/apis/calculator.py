@@ -23,17 +23,23 @@ class Calculator:
         a_product = self.get_item_product(results, a)
         b_product = self.get_item_product(results, b)
 
-        return {a: a_product, b: b_product}
+        return {a: a_product, b: b_product, "results": self.map_results(results)}
 
     def score_append(self, results, api, a, b):
         results.append(api.get_scores(a, b))
 
     def get_item_product(self, results, item):
-        item_scores = [scores[item] for scores in results]
+        item_scores = [scores[0][item] for scores in results]
 
         for i, score in enumerate(item_scores):
-            # no zeroes, just penalties
+            # shh no zeroes, only penalties now
             if score == 0.0:
                 item_scores[i] = 0.5
 
         return reduce(operator.mul, item_scores, 1)
+
+    def map_results(self, results):
+        results_map = {}
+        for scores in results:
+            results_map[scores[1]] = scores[0]
+        return results_map

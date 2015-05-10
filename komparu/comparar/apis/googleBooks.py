@@ -10,7 +10,7 @@ class GoogleBooksAPI:
         score_b = 1.0 + count_b / 10000.0
 
         # more pages, more better
-        return {a: score_a, b: score_b}
+        return {a: score_a, b: score_b}, "Google Books"
 
     def get_score(self, item):
         response = unirest.get(
