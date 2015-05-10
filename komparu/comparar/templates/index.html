@@ -37,7 +37,7 @@
    <br/>
   {% if status == 'success' %}
 
-  <section>
+  <section class="container">
     <div class="row">
       <div class="col-md-6">
         <h2>{{item_left}}</h2>
@@ -50,9 +50,9 @@
     </div>
   </section>
 
-  <div id="amazon">
+  <div class="center" id="amazon">
       <h4>
-          <a href="{{amazon_url}}">Buy {{winner}} on Amazon!</a>
+          <button class="btn-primary" href="{{amazon_url}}">Buy {{winner}} on Amazon!</button>
       </h4>
   </div>
 
