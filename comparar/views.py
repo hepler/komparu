@@ -37,12 +37,12 @@ def index(request):
     # get the Amazon URL for whichever item is better, tell the view who is the queen/king
     if stats:
         if stats[item_left] >= stats[item_right]:
-            winner = item_left
-            loser = item_right
+            winner = strip_last_s(item_left)
+            loser = strip_last_s(item_right)
             amazon_url = getAmazonURL(item_left)
         else:
-            winner = item_right
-            loser = item_left
+            winner = strip_last_s(item_right)
+            loser = strip_last_s(item_left)
             amazon_url = getAmazonURL(item_right)
         difference = int(stats['difference'] * 100)
         # now find images for them
@@ -82,6 +82,12 @@ def index(request):
         'title': title,
         'status': None
     })
+
+def strip_last_s(item):
+    if item.lower().endswith("s"):
+        return item[:-1]
+    else:
+        return item
 
 
 def getImage(item):
