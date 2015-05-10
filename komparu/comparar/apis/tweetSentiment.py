@@ -1,5 +1,6 @@
 import unirest
 import urllib
+import math
 
 class TweetSentimentAPI:
     def get_scores(self, a, b):
@@ -17,4 +18,4 @@ class TweetSentimentAPI:
             }
         )
 
-        return response.body["score"]
+        return math.fabs(response.body["score"])
