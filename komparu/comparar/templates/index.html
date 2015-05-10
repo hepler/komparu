@@ -38,13 +38,15 @@
   {% if status == 'success' %}
 
   <section>
-    <div id="left">
-      <h2>{{item_left}}</h2>
-      <img src="{{image_left}}">
-    </div>
-    <div id="right">
-      <h2>{{item_right}}</h2>
-      <img src="{{image_right}}">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>{{item_left}}</h2>
+        <img src="{{image_left}}">
+      </div>
+      <div class="col-md-6">
+        <h2>{{item_right}}</h2>
+        <img src="{{image_right}}">
+      </div>
     </div>
   </section>
 
