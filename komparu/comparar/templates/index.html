@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
   <meta charset="utf-8">
-  <title>...comparar...</title>
+  <title>...comparar {{title}}</title>
 
   {% load staticfiles %}
 
@@ -27,6 +27,17 @@
 			<a class="btn btn-primary btn-large" href="#">compare some stuff</a>
 		</div>
 	</div>
+   <br/>
+  <section>
+    <div id="left">
+      <h2>{{item_left}}</h2>
+      <img src="{{image_left}}">
+    </div>
+    <div id="right">
+      <h2>{{item_right}}</h2>
+      <img src="{{image_right}}">
+    </div>
+  </section>
 
 </body>
 
