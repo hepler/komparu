@@ -15,3 +15,23 @@ body {
 #blah {
   padding-left: 5em;
 }
+
+section {
+    width: 100%;
+    height: 20em;
+    background: #efefef;
+    margin: auto;
+    padding: 10px;
+}
+#left {
+    width: 50%;
+    float: left;
+}
+#right {
+    margin-left: 15%;
+    width: 50%
+}
+
+img {
+  width: 200px;
+}
