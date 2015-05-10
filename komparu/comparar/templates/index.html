@@ -51,8 +51,9 @@
   </section>
 
   <div class="center" id="amazon">
+    <h1>{{winner}}s are X% better than {{loser}}s!</h1>
       <h4>
-          <button class="btn-primary" href="{{amazon_url}}">Buy {{winner}} on Amazon!</button>
+          <button class="btn-primary" href="{{amazon_url}}">Buy {{winner}}s on Amazon!</button>
       </h4>
   </div>
 
@@ -60,52 +61,63 @@
 
   <section class="container-fluid vertical-center center">
   <div id="results" class="lead">
-    <h2>Results</h2>
-    <p> The Twitter sentiment for
+    <h2>How We Determine Worth</h2>
+    
+    <p class="row top-buffer"> The Twitter sentiment for
       <strong>{{winner}}</strong> is X.
       <strong>{{loser}}&#39s</strong> is Y.
     </p>
-    <p> More extreme sentiment, regardless of whether sentiment was positive, meant higher scores, because
-      <strong>passion.</strong> </p>
-    <p> Gender guesser guessed that
+    <em class="small"> More extreme sentiment, regardless of whether sentiment was positive, meant higher scores, because
+      <strong>passion.</strong> 
+    </em>
+
+    <p class="row top-buffer"> Gender guesser guessed that
       <strong>{{winner}}</strong> is a X, and that
       <strong>{{loser}}</strong> is a Y.
     </p>
-    <p> Being a female gives you a 150% kicker because,
+    <em class="small"> Being a female gives you a 150% kicker because,
       <strong>diversity.</strong>
-    </p>
-    <p>
+    </em>
+
+    <p class="row top-buffer">
       <strong>{{winner}}</strong> has X synonyms,
       <strong>{{loser}}</strong> has Y.
     </p>
-    <p> More synonyms amplified
+    <em class="small"> More synonyms amplified
       <strong>{{winner}}&#39s</strong> score, because
       <strong>ubiquity.</strong>
-    </p>
-    <p>
+    </em>
+
+    <p class="row top-buffer">
       <strong>{{winner}}</strong> has X synonyms,
       <strong>{{loser}}</strong> has Y.
     </p>
-    <p> More antonyms amplified
+    <em class="small"> More antonyms amplified
       <strong>{{winner}}&#39s</strong> score, because
-      <strong>disruptive.</strong> </p>
-    <p> Angellist notes X startups related to
+      <strong>disruptive.</strong> 
+    </em>
+
+    <p class="row top-buffer"> Angellist notes X startups related to
       <strong>{{winner}}</strong>, versus Y for
       <strong>{{loser}}</strong>. </p>
-    <p> More startups means a higher score, because
-      <strong>buzz.</strong> </p>
-    <p> The top 40 Google Books on the subject of
+    <em class="small"> More startups means a higher score, because
+      <strong>buzz.</strong> 
+    </em>
+
+    <p class="row top-buffer"> The top 40 Google Books on the subject of
       <strong>{{winner}}</strong>.
     </p>
-    <p> More pages means a higher score, because
-      <strong>verbosity.</strong>  </p>
-    <p> Finally,
+    <em class="small"> More pages means a higher score, because
+      <strong>verbosity.</strong>  
+    </em>
+
+    <p class="row top-buffer"> Finally,
       <strong>{{winner}}</strong> turns up X results on Google, while
       <strong>{{loser}}</strong> turns up only Y.
     </p>
-    <p> More results on Google means a higher score, because
+    <em class="small"> More results on Google means a higher score, because
       <strong>big data.</strong>
-    </p>
+    </em>
   </div>
   </section>
   </div>
