@@ -25,7 +25,7 @@ def index(request):
         title = ' RESULTS...'
         item_left = request.POST['input_left']
         item_right = request.POST['input_right']
-        stats = aggregateScores(item_left, item_right)
+        stats = CALCULATOR.get_scores(item_left, item_right)
 
     # now find images for them
     image_left = getImage(item_left)
@@ -63,35 +63,6 @@ def getImage(item):
     image_url = deserialized_output['responseData']['results'][0]['unescapedUrl']
 
     return image_url
-
-
-def aggregateScores(item_left, item_right):
-        """ Returns list of scores from the API requests.
-
-        Parameters
-        ----------
-        item_left: string
-            the left side search term from the user
-        item_right: string
-            the right side search term from the user
-        """
-        angel_list = AngelListAPI().get_scores(item_left, item_right)
-        gender_guesser = GenderGuesserAPI().get_scores(item_left, item_right)
-        google_books = GoogleBooksAPI().get_scores(item_left, item_right)
-        # google_results = GoogleResultsAPI().get_scores(item_left, item_right)
-        thesaurus = ThesaurusAPI().get_scores(item_left, item_right)
-        tweet_sentiment = TweetSentimentAPI().get_scores(item_left, item_right)
-
-        scores = [
-            angel_list,
-            gender_guesser,
-            google_books,
-            # google_results,
-            thesaurus,
-            tweet_sentiment
-        ]
-
-        return scores
 
 
 class Calculator:
@@ -333,3 +304,14 @@ class TweetSentimentAPI:
         )
 
         return math.fabs(response.body["score"])
+
+
+angelListAPI = AngelListAPI()
+genderGuesserAPI = GenderGuesserAPI()
+googleBooksAPI = GoogleBooksAPI()
+googleResultsAPI = GoogleResultsAPI()
+thesaurusAPI = ThesaurusAPI()
+tweetSentimentAPI = TweetSentimentAPI()
+
+APIS = [angelListAPI, genderGuesserAPI, googleBooksAPI, googleResultsAPI, thesaurusAPI, tweetSentimentAPI]
+CALCULATOR = Calculator(APIS)
