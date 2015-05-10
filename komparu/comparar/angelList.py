@@ -32,4 +32,4 @@ class AngelListAPI:
         if total == 0:
             return 1.0
 
-        return 1.0 - (count / total / 10.0)
+        return 1.0 - (count / 10.0 / total)
