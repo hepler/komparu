@@ -20,6 +20,8 @@ def index(request):
     item_right = 'dolphin'
     stats = None
     amazon_url = None
+    winner = None
+    loser = None
 
     # if user entered items, use them
     if request.method == "POST":
@@ -28,11 +30,15 @@ def index(request):
         item_right = request.POST['input_right']
         stats = CALCULATOR.get_scores(item_left, item_right)
 
-    # get the Amazon URL for whichever item is better
+    # get the Amazon URL for whichever item is better, tell the view who is the queen/king
     if stats:
         if stats[item_left] >= stats[item_right]:
+            winner = item_left
+            loser = item_right
             amazon_url = getAmazonURL(item_left)
         else:
+            winner = item_right
+            loser = item_left
             amazon_url = getAmazonURL(item_right)
 
 
@@ -47,7 +53,9 @@ def index(request):
         'image_left': image_left,
         'image_right': image_right,
         'amazon_url': amazon_url,
-        'stats': stats
+        'stats': stats,
+        'winner': winner,
+        'loser': loser
     })
 
 
