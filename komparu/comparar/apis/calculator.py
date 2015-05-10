@@ -1,4 +1,5 @@
 import operator
+import threading
 
 class Calculator:
 
@@ -6,12 +7,26 @@ class Calculator:
         self.apis = apis
 
     def get_scores(self, a, b):
-        results = [api.get_scores(a, b) for api in self.apis]
+        results = []
+        threads = []
+
+        for api in self.apis:
+            thread = threading.Thread(target=self.score_append, args=(results, api, a, b))
+            threads.append(thread)
+
+        for t in threads:
+            t.start()
+
+        for t in threads:
+            t.join()
 
         a_product = self.get_item_product(results, a)
         b_product = self.get_item_product(results, b)
 
         return {a: a_product, b: b_product}
+
+    def score_append(self, results, api, a, b):
+        results.append(api.get_scores(a, b))
 
     def get_item_product(self, results, item):
         item_scores = [scores[item] for scores in results]
