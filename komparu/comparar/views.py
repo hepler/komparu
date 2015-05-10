@@ -9,9 +9,15 @@ import cStringIO
 def index(request):
     """ Return index page. """
 
-    # get the two items, find images for them
     item_left = 'doge'
     item_right = 'dolphin'
+
+    # if user entered items, use them
+    if request.method == "POST":
+        item_left = request.POST['input_left']
+        item_right = request.POST['input_right']
+
+    # now find images for them
     image_left = getImage(item_left)
     image_right = getImage(item_right)
 
@@ -33,13 +39,16 @@ def getImage(item):
         the search term that the user entered
     """
 
+    # replace whitepace for use in URL
+    item = item.replace(' ', "%20")
+
+    # query on the item, grab the url for the first image result
     fetcher = urllib2.build_opener()
-    searchTerm = item
-    startIndex = 0
-    searchUrl = "http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=" + searchTerm + "&start=" + str(startIndex)
-    f = fetcher.open(searchUrl)
+    search_result_index = '0'
+    search_query = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + item + '&start=' + search_result_index
+    f = fetcher.open(search_query)
     deserialized_output = simplejson.load(f)
 
-    imageUrl = deserialized_output['responseData']['results'][0]['unescapedUrl']
+    image_url = deserialized_output['responseData']['results'][0]['unescapedUrl']
 
-    return imageUrl
+    return image_url
