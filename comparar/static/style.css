@@ -1,0 +1,47 @@
+/************************************************
+GENERAL
+************************************************/
+
+body {
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-weight: bold;
+    margin: 0;
+}
+
+.view {
+  margin-top: 5em;
+}
+
+#blah {
+  padding-left: 5em;
+}
+
+section {
+    width: 100%;
+    height: 20em;
+    background: #efefef;
+    margin: auto;
+    padding: 10px;
+}
+
+img {
+  width: 200px;
+}
+
+.vertical-center {
+  min-height: 100%;  
+  min-height: 100vh; 
+
+  display: flex;
+  align-items: center;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+.top-buffer { 
+  margin-top:20px; 
+}

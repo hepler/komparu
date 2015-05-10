@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta charset="utf-8">
+  <title>...comparar{{title}}</title>
+
+  {% load staticfiles %}
+
+  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+
+  <!-- Pulling ourselves up by others' Bootstap :D -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+  <div class="box box-element">
+	<div class="view">
+		<div class="jumbotron" id="blah" contenteditable="false">
+
+			<h1>comparar</h1>
+			<p>
+        everything you don't want to know about anything
+      </p>
+
+
+      <form method="POST" class="input-items">
+          {% csrf_token %}
+          <input name="input_left" placeholder="compare this"></input>
+          <input name="input_right" placeholder="with this"></input>
+          <input type="submit" value="compare some stuff" class="btn btn-primary btn-large">
+      </form>
+		</div>
+	</div>
+   <br/>
+  {% if status == 'success' %}
+
+  <section class="container">
+    <div class="row">
+      <div class="col-md-6">
+        <h2>{{item_left}}</h2>
+        <img src="{{image_left}}">
+      </div>
+      <div class="col-md-6">
+        <h2>{{item_right}}</h2>
+        <img src="{{image_right}}">
+      </div>
+    </div>
+  </section>
+
+  <div class="center" id="amazon">
+    <h1>{{winner}}s are X% better than {{loser}}s!</h1>
+      <h4>
+          <button class="btn-primary" href="{{amazon_url}}">Buy {{winner}}s on Amazon!</button>
+      </h4>
+  </div>
+
+<br/><br/><br/><br/>
+
+  <section class="container-fluid vertical-center center">
+  <div id="results" class="lead">
+    <h2>How We Determine Worth</h2>
+    
+    <p class="row top-buffer"> The Twitter sentiment for
+      <strong>{{winner}}</strong> is X.
+      <strong>{{loser}}&#39s</strong> is Y.
+    </p>
+    <em class="small"> More extreme sentiment, regardless of whether sentiment was positive, meant higher scores, because
+      <strong>passion.</strong> 
+    </em>
+
+    <p class="row top-buffer"> Gender guesser guessed that
+      <strong>{{winner}}</strong> is a X, and that
+      <strong>{{loser}}</strong> is a Y.
+    </p>
+    <em class="small"> Being a female gives you a 150% kicker because,
+      <strong>diversity.</strong>
+    </em>
+
+    <p class="row top-buffer">
+      <strong>{{winner}}</strong> has X synonyms,
+      <strong>{{loser}}</strong> has Y.
+    </p>
+    <em class="small"> More synonyms amplified
+      <strong>{{winner}}&#39s</strong> score, because
+      <strong>ubiquity.</strong>
+    </em>
+
+    <p class="row top-buffer">
+      <strong>{{winner}}</strong> has X synonyms,
+      <strong>{{loser}}</strong> has Y.
+    </p>
+    <em class="small"> More antonyms amplified
+      <strong>{{winner}}&#39s</strong> score, because
+      <strong>disruptive.</strong> 
+    </em>
+
+    <p class="row top-buffer"> Angellist notes X startups related to
+      <strong>{{winner}}</strong>, versus Y for
+      <strong>{{loser}}</strong>. </p>
+    <em class="small"> More startups means a higher score, because
+      <strong>buzz.</strong> 
+    </em>
+
+    <p class="row top-buffer"> The top 40 Google Books on the subject of
+      <strong>{{winner}}</strong>.
+    </p>
+    <em class="small"> More pages means a higher score, because
+      <strong>verbosity.</strong>  
+    </em>
+
+    <p class="row top-buffer"> Finally,
+      <strong>{{winner}}</strong> turns up X results on Google, while
+      <strong>{{loser}}</strong> turns up only Y.
+    </p>
+    <em class="small"> More results on Google means a higher score, because
+      <strong>big data.</strong>
+    </em>
+  </div>
+  </section>
+  </div>
+
+  {% elif status == 'fail' %}
+    <h1>
+      try again :(
+    </h1>
+
+  {% endif %}
+</body>
+
+</html>

@@ -1,0 +1,4 @@
+
+[poster]
+buildutils
+sphinx
