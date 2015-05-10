@@ -3,11 +3,14 @@ import urllib
 
 class GenderGuesserAPI:
     def get_scores(self, a, b):
-        score_a = self.get_score(a)
-        score_b = self.get_score(b)
-        return {a: score_a, b: score_b}, "Gender Guesser"
+        gender_a = self.get_gender(a)
+        gender_b = self.get_gender(b)
 
-    def get_score(self, item):
+        score_a = self.get_score(gender_a)
+        score_b = self.get_score(gender_b)
+        return "Gender Guesser", {a: score_a, b: score_b}, {a: str(gender_a), b: str(gender_b)}
+
+    def get_gender(self, item):
         response = unirest.get(
             "https://montanaflynn-gender-guesser.p.mashape.com/?name={0}".format(
                 urllib.quote_plus(item)),
@@ -18,11 +21,12 @@ class GenderGuesserAPI:
         )
 
         try:
-            gender = response.body["gender"]
+            return response.body["gender"]
         except:
             # no gender response (or any error) means neutral
-            return 1.0
+            return None
 
+    def get_score(self, gender):
         if not gender:
             return 1.0
         elif gender == "female":

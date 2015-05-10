@@ -6,7 +6,9 @@ class TweetSentimentAPI:
     def get_scores(self, a, b):
         score_a = self.get_score(a)
         score_b = self.get_score(b)
-        return {a: score_a, b: score_b}, "Twitter Sentiment"
+
+        # this sanitized output does not differ from the calculated score
+        return "Twitter Sentiment", {a: score_a, b: score_b}, {a: score_a, b: score_b}
 
     def get_score(self, item):
         response = unirest.get(

@@ -29,7 +29,7 @@ class Calculator:
         results.append(api.get_scores(a, b))
 
     def get_item_product(self, results, item):
-        item_scores = [scores[0][item] for scores in results]
+        item_scores = [scores[1][item] for scores in results]
 
         for i, score in enumerate(item_scores):
             # shh no zeroes, only penalties now
@@ -41,5 +41,5 @@ class Calculator:
     def map_results(self, results):
         results_map = {}
         for scores in results:
-            results_map[scores[1]] = scores[0]
+            results_map[scores[0]] = {"scores": scores[1], "sanitized": scores[2]}
         return results_map

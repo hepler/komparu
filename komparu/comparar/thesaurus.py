@@ -3,20 +3,18 @@ import urllib
 
 class ThesaurusAPI:
     def get_scores(self, a, b):
-        count_a = self.get_score(a)
-        count_b = self.get_score(b)
+        count_a = self.get_count(a)
+        count_b = self.get_count(b)
 
         total = count_a + count_b
 
-        if total == 0:
-            return {a: 0.0, b: 0.0}, "Thesaurus"
+        score_a = self.get_score(total, count_a)
+        score_b = self.get_score(total, count_b)
 
-        ratio_a = count_a * 1.0 / total
-        ratio_b = count_b * 1.0 / total
+        # the sanitized output here does not yet differentiate between synonyms and antonyms
+        return "Thesaurus", {a: score_a, b: score_b}, {a: count_a, b: count_b}
 
-        return {a: 1.0 + ratio_a, b: 1.0 + ratio_b}, "Thesaurus"
-
-    def get_score(self, item):
+    def get_count(self, item):
         response = unirest.get(
             "http://words.bighugelabs.com/api/2/1992b053499e0716fe1b8308c5c40727/{0}/json".format(
                 urllib.quote_plus(item)))
@@ -39,3 +37,10 @@ class ThesaurusAPI:
             if body[tense].get(key):
                 lists.append(body[tense].get(key))
         return lists
+
+    def get_score(self, total, count):
+        if total == 0:
+            # this originally was 0.0, do I mean to change this or is it just 1:12am?
+            return 1.0
+
+        return 1.0 + (count * 1.0 / total)
