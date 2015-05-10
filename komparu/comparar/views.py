@@ -43,8 +43,6 @@ def index(request):
             winner = item_right
             loser = item_left
             amazon_url = getAmazonURL(item_right)
-        item_left = request.POST['input_left']
-        item_right = request.POST['input_right']
 
         # now find images for them
         image_left = getImage(item_left)

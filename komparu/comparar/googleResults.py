@@ -4,21 +4,25 @@ import urllib
 import re
 
 class GoogleResultsAPI:
-    cats = float(419000000) # number of cats this metric finds
     count_re = re.compile(r'About ([0-9,]+) results')
 
     def get_scores(self, a, b):
         results_a = self.get_results(a)
         results_b = self.get_results(b)
 
-        score_a = GoogleResultsAPI.calculate_score(results_a)
-        score_b = GoogleResultsAPI.calculate_score(results_b)
+        total = results_a + results_b
+
+        score_a = GoogleResultsAPI.calculate_score(total, results_a)
+        score_b = GoogleResultsAPI.calculate_score(total, results_b)
 
         return "Google Search", {a: score_a, b: score_b}, {a: results_a, b: results_b}
 
     @staticmethod
-    def calculate_score(results):
-        return (results - GoogleResultsAPI.cats) / GoogleResultsAPI.cats + 1
+    def calculate_score(total, count):
+        if total == 0:
+            return 0.0
+
+        return 1.0 + (count / 10.0 / total)
 
     @staticmethod
     def broken_get_results(item):
@@ -41,7 +45,7 @@ class GoogleResultsAPI:
         )
 
         match = GoogleResultsAPI.count_re.search(response.body)
-        if (match):
+        if match:
             return int(match.group(1).replace(',', ''))
         else:
             return 0
