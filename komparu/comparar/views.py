@@ -32,6 +32,7 @@ def index(request):
         item_left = request.POST['input_left'].title()
         item_right = request.POST['input_right'].title()
         stats = CALCULATOR.get_scores(item_left, item_right)
+        print stats
 
     # get the Amazon URL for whichever item is better, tell the view who is the queen/king
     if stats:
@@ -61,19 +62,6 @@ def index(request):
                 'image_left': image_left,
                 'image_right': image_right
             })
-
-        stats = CALCULATOR.get_scores(item_left, item_right)
-
-        # get the Amazon URL for whichever item is better, tell the view who is the queen/king
-        if stats:
-            if stats[item_left] >= stats[item_right]:
-                winner = item_left
-                loser = item_right
-                amazon_url = getAmazonURL(item_left)
-            else:
-                winner = item_right
-                loser = item_left
-                amazon_url = getAmazonURL(item_right)
 
         return render(request, 'index.html', {
             'title': title,
