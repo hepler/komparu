@@ -45,3 +45,14 @@ img {
 .top-buffer { 
   margin-top:20px; 
 }
+
+.logo img {
+    width:800px;
+    height: 230px;
+}
+
+.left-buffer {
+  margin-left: 20px;
+}
+
+
