@@ -16,7 +16,6 @@ from thesaurus import ThesaurusAPI
 from tweetSentiment import TweetSentimentAPI
 from calculator import Calculator
 
-bad_result = "https://d13yacurqjgara.cloudfront.net/users/596597/screenshots/1714959/microwave-sad-face_1x.png"
 
 def index(request):
     """ Return index page. """
@@ -51,7 +50,7 @@ def index(request):
         image_right = getImage(item_right)
 
         # make sure we are getting real things...
-        if (image_left == bad_result) or (image_right == bad_result):
+        if (image_left == "no result") or (image_right == "no result"):
             print
             print 'no image associated with user request'
             print
@@ -108,7 +107,7 @@ def getImage(item):
 
         image_url = deserialized_output['responseData']['results'][0]['unescapedUrl']
     except:
-        image_url = "https://d13yacurqjgara.cloudfront.net/users/596597/screenshots/1714959/microwave-sad-face_1x.png"
+        image_url = "no result"
 
     return image_url
 
