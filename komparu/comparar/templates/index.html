@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
   <meta charset="utf-8">
-  <title>...comparar {{title}}</title>
+  <title>...comparar{{title}}</title>
 
   {% load staticfiles %}
 
@@ -45,8 +45,16 @@
       <img src="{{image_right}}">
     </div>
   </section>
-  <br/><br/>and the stats are:<br/><br/>
-  {{stats}}
+
+  <br/><br/><br/><br/>
+
+  <div class="stats">
+    <h4>
+      and the stats are:<br/><br/>
+      {{stats}}
+    </h4>
+  </div>
+
 </body>
 
 </html>
