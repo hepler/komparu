@@ -18,7 +18,8 @@ def index(request):
     title = '...'
     item_left = 'doge'
     item_right = 'dolphin'
-    stats = [None]
+    stats = None
+    amazon_url = None
 
     # if user entered items, use them
     if request.method == "POST":
@@ -26,6 +27,14 @@ def index(request):
         item_left = request.POST['input_left']
         item_right = request.POST['input_right']
         stats = CALCULATOR.get_scores(item_left, item_right)
+
+    # get the Amazon URL for whichever item is better
+    if stats:
+        if stats[item_left] >= stats[item_right]:
+            amazon_url = getAmazonURL(item_left)
+        else:
+            amazon_url = getAmazonURL(item_right)
+
 
     # now find images for them
     image_left = getImage(item_left)
@@ -37,6 +46,7 @@ def index(request):
         'item_right': item_right,
         'image_left': image_left,
         'image_right': image_right,
+        'amazon_url': amazon_url,
         'stats': stats
     })
 
@@ -63,6 +73,14 @@ def getImage(item):
     image_url = deserialized_output['responseData']['results'][0]['unescapedUrl']
 
     return image_url
+
+
+def getAmazonURL(item):
+    """
+    A utility for retrieving the Amazon search results URL for some item.
+    """
+
+    return "http://www.amazon.com/s?field-keywords={0}".format(urllib.quote_plus(item))
 
 
 class Calculator:
