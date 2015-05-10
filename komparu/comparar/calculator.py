@@ -43,7 +43,20 @@ class Calculator:
         for scores in results:
             score_a = scores[1][a]
             score_b = scores[1][b]
-            winner = a if score_a >= score_b else b
+            if score_a >= score_b:
+                winner = a
+                loser = b
+                win_percent = (score_a - score_b) * 100
+            else:
+                winner = b
+                loser = a
+                win_percent = (score_b - score_a) * 100
 
-            results_map[scores[0]] = {"scores": scores[1], "sanitized": scores[2], "winner": winner}
+            results_map[scores[0]] = {
+                "scores": scores[1],
+                "sanitized": scores[2],
+                "winner": winner,
+                "loser": loser,
+                "win_percent": win_percent
+            }
         return results_map
