@@ -1,4 +1,9 @@
+dj-database-url==0.3.0
+dj-static==0.0.6
 Django==1.8.1
-Unirest==1.1.7
+gunicorn==19.3.0
 poster==0.8.1
-wsgiref==0.1.2
+pystache==0.5.4
+static==1.1.1
+static3==0.6.0
+Unirest==1.1.7
