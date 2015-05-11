@@ -1,6 +1,6 @@
 # komparu
 
-Comparing things since 2015, to end all debates. [Try it yourself](https://cryptic-spire-9205.herokuapp.com/).
+Comparing things since 2015, to end all debates. [Try it yourself](https://goo.gl/9zKoPp).
 
 Made with passion by [Kurt Hepler](https://github.com/hepler), [Wyatt Hepler](https://github.com/255), [Clementine Jacoby](https://github.com/clementinej), and [Joshua Essex](https://github.com/jessex).
 
