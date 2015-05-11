@@ -1,4 +1,5 @@
 # Django
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Other
@@ -25,14 +26,36 @@ def index(request):
     winner = None
     loser = None
 
-
-    # if user entered items, use them
+    # if user entered items, immediately redirect to GET call with query parameters
     if request.method == "POST":
-        title = ' RESULTS...'
         item_left = request.POST['input_left'].title()
         item_right = request.POST['input_right'].title()
+        return HttpResponseRedirect("/?left={0}&right={1}".format(item_left, item_right))
+
+    # both query parameters, so proceed
+    elif "left" in request.GET and "right" in request.GET:
+        title = ' RESULTS...'
+        item_left = request.GET.get("left")
+        item_right = request.GET.get("right")
         stats = CALCULATOR.get_scores(item_left, item_right)
         print stats
+
+    # left query parameter but not right
+    elif "left" in request.GET:
+        return render(request, 'index.html', {
+            'title': ' :(',
+            'status': 'fail',
+            'failure_description': '"left" query parameter given but not "right" query parameter'
+        })
+
+    # right query parameter but not left
+    elif "right" in request.GET:
+        print '"right" query parameter given but not "left" query parameter'
+        return render(request, 'index.html', {
+            'title': ' :(',
+            'status': 'fail',
+            'failure_description': '"right" query parameter given but not "left" query parameter'
+        })
 
     # get the Amazon URL for whichever item is better, tell the view who is the queen/king
     if stats:
@@ -51,12 +74,10 @@ def index(request):
 
         # make sure we are getting real things...
         if (image_left == "no result") or (image_right == "no result"):
-            print
-            print 'no image associated with user request'
-            print
             return render(request, 'index.html', {
                 'title': ' :(',
                 'status': 'fail',
+                'failure_description': 'no image associated with user request',
                 'item_left': item_left,
                 'item_right': item_right,
                 'image_left': image_left,
