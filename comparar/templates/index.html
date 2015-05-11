@@ -110,7 +110,7 @@
       <strong>disruptive.</strong>
     </em> -->
 
-    <p class="row top-buffer"> Angellist notes {{ stats.results|get_winner_item:"Angel List" }} startups related to
+    <p class="row top-buffer"> Angel List notes {{ stats.results|get_winner_item:"Angel List" }} startups related to
       <strong>{{winner}}</strong>, versus {{ stats.results|get_loser_item:"Angel List" }} for
       <strong>{{loser}}</strong>.
     </p>
@@ -139,7 +139,7 @@
 
   {% elif status == 'fail' %}
     <h1>
-      try again :(
+      try again! {{failure_description}}
     </h1>
 
   {% endif %}
