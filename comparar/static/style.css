@@ -10,7 +10,8 @@
     font-size: 2em;
 
     height: 50px;
-    width: 300px;
+    min-width: 300px;
+
     background-color: #00A2D2;
     border: 1px solid transparent;
     border-radius: 4px;
