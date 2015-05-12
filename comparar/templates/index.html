@@ -12,9 +12,9 @@
   <!-- Pulling ourselves up by others' Bootstap :D -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
@@ -22,17 +22,17 @@
 
       ga('create', 'UA-62828202-1', 'auto');
       ga('send', 'pageview');
-    </script>
+  </script>
 
 </head>
 
 <body>
   <div class="box box-element">
-	<div class="view">
-		<div class="jumbotron" id="blah" contenteditable="false">
+	<div id="top-box">
+
 
     <div class="logo">
-      <img src="{% static "logo.jpg" %}" alt="Logo"/>
+      <img src="{% static 'logo.jpg' %}" alt="Logo"/>
     </div>
 			<h2>
         Everything you don't want to know about anything
@@ -40,19 +40,18 @@
 
 
       <form method="POST" class="input-items">
-          {% csrf_token %}
-          <div class="row top-buffer">
-            <input class="col-md-2 left-buffer" name="input_left" placeholder="compare this"></input>
-            <input class="col-md-2 left-buffer" name="input_right" placeholder="with this"></input>
-            <input class="col-md-2 left-buffer" type="submit" value="comparify" class="btn btn-primary btn-large">
-        </div>
+        {% csrf_token %}
+          <input class="input-text top-buffer" name="input_left" placeholder="compare this">
+          <input class="input-text top-buffer" name="input_right" placeholder="with this">
+          <br/>
+          <input type="submit" class="top-buffer custom-btn" value="comparify">
       </form>
-		</div>
+
 	</div>
    <br/>
   {% if status == 'success' %}
 
-  <section class="container">
+  <div id="images" class="container">
     <div class="row">
       <div class="col-md-6">
         <h2>{{item_left}}</h2>
@@ -63,15 +62,14 @@
         <img src="{{image_right}}">
       </div>
     </div>
-  </section>
-  <div class="center" id="amazon">
-    <h1>{{winner}}s are {{difference}}% better than {{loser}}s!</h1>
-      <h4>
-          <a href="{{amazon_url}}" target="_blank"><button class="btn-primary">Buy {{winner}}s on Amazon!</button></a>
-      </h4>
   </div>
 
-<br/><br/><br/><br/>
+  <div class="center" id="winner">
+    <h1>{{winner}}s are {{difference}}% better than {{loser}}s!</h1>
+      <h4>
+          <input type="button" class="custom-btn small-text" onclick="window.open('{{amazon_url}}','_blank')" value="Buy {{winner}}s on Amazon!">
+      </h4>
+  </div>
 
   <section class="container-fluid vertical-center center">
   <div id="results" class="lead">
@@ -110,7 +108,7 @@
       <strong>disruptive.</strong>
     </em> -->
 
-    <p class="row top-buffer"> Angel List notes {{ stats.results|get_winner_item:"Angel List" }} startups related to
+    <p class="row top-buffer"> AngelList notes {{ stats.results|get_winner_item:"Angel List" }} startups related to
       <strong>{{winner}}</strong>, versus {{ stats.results|get_loser_item:"Angel List" }} for
       <strong>{{loser}}</strong>.
     </p>

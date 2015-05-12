@@ -1,39 +1,78 @@
-/************************************************
-GENERAL
-************************************************/
+/* general stylings and resources */
 
-body {
-    font-family: "Comic Sans MS", cursive, sans-serif;
-    font-weight: bold;
-    margin: 0;
+.col-centered{
+    float: none;
+    margin: 0 auto;
 }
 
-.view {
-  margin-top: 5em;
+.custom-btn {
+    color: #fff;
+    font-size: 2em;
+
+    height: 50px;
+    width: 300px;
+    background-color: #00A2D2;
+    border: 1px solid transparent;
+    border-radius: 4px;
 }
 
-#blah {
-  padding-left: 5em;
+.small-text {
+    font-size: 1em;
 }
+
+
+
+/* the top search box */
+#top-box {
+    margin-top: 5em;
+    background: #ddd;
+    height: 470px;
+    text-align: center;
+}
+
+.input-text {
+    height: 50px;
+    width: 12.5em;
+    font-size: 2em;
+    padding: 10px;
+}
+
+/* the images with titles */
+
+#images {
+    height: 23em;
+    background: #ddd;
+}
+
+#images img {
+    max-height: 15em;
+    border: 2px solid #bbb;
+    border-radius: 5px;
+}
+
+/* the winner announcement */
+
+#winner {
+    text-align: center;
+}
+
+
+/* the results box */
 
 section {
     width: 100%;
-    height: 20em;
-    background: #efefef;
+    height: 23em;
+    background: #ddd;
     margin: auto;
     padding: 10px;
 }
 
-img {
-  width: 200px;
-}
-
 .vertical-center {
-  min-height: 100%;  
-  min-height: 100vh; 
+    min-height: 100%;
+    min-height: 100vh;
 
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .center {
@@ -42,8 +81,10 @@ img {
     width: 70%;
 }
 
-.top-buffer { 
-  margin-top:20px; 
+/* rows */
+
+.top-buffer {
+    margin-top:20px;
 }
 
 .logo img {
@@ -52,7 +93,5 @@ img {
 }
 
 .left-buffer {
-  margin-left: 20px;
+    margin-left: 20px;
 }
-
-
