@@ -55,11 +55,19 @@
     <div class="row">
       <div class="col-md-6">
         <h2>{{item_left}}</h2>
-        <img src="{{image_left}}">
+        {% if image_left %}
+          <img src="{{image_left}}">
+        {% else %}
+          Whoops! Image could not be found.
+        {% endif %}
       </div>
       <div class="col-md-6">
         <h2>{{item_right}}</h2>
-        <img src="{{image_right}}">
+        {% if image_right %}
+          <img src="{{image_right}}">
+        {% else %}
+          Whoops! Image could not be found.
+        {% endif %}
       </div>
     </div>
   </div>

@@ -76,12 +76,14 @@ def index(request):
         if (image_left == "no result") or (image_right == "no result"):
             return render(request, 'index.html', {
                 'title': ' :(',
-                'status': 'fail',
-                'failure_description': 'no image associated with user request',
+                'status': 'success',
                 'item_left': item_left,
                 'item_right': item_right,
-                'image_left': image_left,
-                'image_right': image_right
+                'amazon_url': amazon_url,
+                'stats': stats,
+                'winner': winner,
+                'loser': loser,
+                'difference': difference
             })
 
         return render(request, 'index.html', {
