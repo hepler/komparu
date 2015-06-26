@@ -6,12 +6,18 @@ register = template.Library()
 @register.filter(name='get_winner_item')
 def get_winner_item(dictionary, api):
     here = dictionary.get(api)
+    if not here:
+        return None
+
     sanitized = here['sanitized']
     return sanitized[here['winner']]
 
 @register.filter(name='get_loser_item')
 def get_loser_item(dictionary, api):
     here = dictionary.get(api)
+    if not here:
+        return None
+
     sanitized = here['sanitized']
     return sanitized[here['loser']]
 
