@@ -16,6 +16,7 @@ from googleResults import GoogleResultsAPI
 from thesaurus import ThesaurusAPI
 from tweetSentiment import TweetSentimentAPI
 from calculator import Calculator
+from bing_search_api import BingSearchAPI
 
 
 def index(request):
@@ -114,7 +115,7 @@ def strip_last_s(item):
 
 
 def getImage(item):
-    """ Returns link to an image of the desired item.
+    """ Returns link to an image of the desired item, using Bing Search API.
 
     Parameters
     ----------
@@ -122,21 +123,20 @@ def getImage(item):
         the search term that the user entered
     """
 
-    # replace whitepace for use in URL
-    item = item.replace(' ', '%20')
-    try:
-        random_index = randint(0, 10)
-        # query on the item, grab the url for the first image result
-        query_builder = urllib2.build_opener()
+    num_images = 30
+    random_index = randint(0, num_images - 1)
 
-        search_result_index = str(random_index)
-        search_query = 'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&q=' + item + '&start=' + search_result_index
-        query_results = query_builder.open(search_query)
-        deserialized_output = json.load(query_results)
+    query_string = item
 
-        image_url = deserialized_output['responseData']['results'][0]['unescapedUrl']
-    except:
-        image_url = "no result"
+    params = {
+        '$format': 'json',
+        '$top': num_images,
+        '$skip': 0,
+    }
+
+    result = bing.search('image', query_string, params).json()
+
+    image_url = result['d']['results'][0]['Image'][random_index]['MediaUrl']
 
     return image_url
 
@@ -149,12 +149,17 @@ def getAmazonURL(item):
     return "http://www.amazon.com/s?field-keywords={0}".format(urllib.quote_plus(item))
 
 
+#
+# SETUP
+bing_key = 'api_key_here'
+
 angelListAPI = AngelListAPI()
 genderGuesserAPI = GenderGuesserAPI()
 googleBooksAPI = GoogleBooksAPI()
 googleResultsAPI = GoogleResultsAPI()
 thesaurusAPI = ThesaurusAPI()
 tweetSentimentAPI = TweetSentimentAPI()
+bing = BingSearchAPI(bing_key)
 
 APIS = [angelListAPI, genderGuesserAPI, googleBooksAPI, googleResultsAPI, thesaurusAPI, tweetSentimentAPI]
 CALCULATOR = Calculator(APIS)
