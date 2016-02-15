@@ -1,154 +1,159 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-  <meta charset="utf-8">
-  <title>...comparar{{title}}</title>
+    <meta charset="utf-8">
+    <title>...comparar{{title}}</title>
 
-  {% load staticfiles %}
-  {% load app_filters %}
+    {% load staticfiles %}
+    {% load app_filters %}
 
-  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
 
-  <!-- Pulling ourselves up by others' Bootstap :D -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-  <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-62828202-1', 'auto');
-      ga('send', 'pageview');
-  </script>
+    <!-- Pulling ourselves up by others' Bootstap :D -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-62828202-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+    <script src="{% static 'index.js' %}"></script>
 
 </head>
 
 <body>
-  <div class="box box-element">
-	<div id="top-box">
+    <div class="box box-element">
+        <div id="top-box">
 
+            <a href="/">
+                <div class="logo">
+                    <img src="{% static 'logo.jpg' %}" alt="Logo"/>
+                </div>
+            </a>
+            <h2>
+                everything you don't want to know about anything
+            </h2>
 
-    <div class="logo">
-      <img src="{% static 'logo.jpg' %}" alt="Logo"/>
+            <form method="POST" class="input-items">
+                {% csrf_token %}
+                <input class="input-text top-buffer" name="input_left" placeholder="compare this">
+                <input class="input-text top-buffer" name="input_right" placeholder="with this">
+                <br/>
+                <input type="submit" id="comparify-btn" class="top-buffer custom-btn" value="comparify">
+                <div id="loading">
+                    <img src="{% static 'loading.svg' %}"/>
+                </div>
+            </form>
+        </div>
+        <br/>
+
+    {% if status == 'success' %}
+
+        <div id="images" class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2>{{item_left}}</h2>
+                    {% if image_left %}
+                        <img src="{{image_left}}">
+                    {% else %}
+                        Whoops! Image could not be found.
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    <h2>{{item_right}}</h2>
+                    {% if image_right %}
+                        <img src="{{image_right}}">
+                    {% else %}
+                        Whoops! Image could not be found.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="center" id="winner">
+            <h1>{{winner}}s are {{difference}}% better than {{loser}}s!</h1>
+            <h4>
+                <input type="button" class="custom-btn small-text" onclick="window.open('{{amazon_url}}','_blank')" value="Buy {{winner}}s on Amazon!">
+            </h4>
+        </div>
+
+        <section class="container-fluid vertical-center center">
+            <div id="results" class="lead">
+                <h2>How We Determine Worth</h2>
+
+                <p class="row top-buffer"> The Twitter sentiment for
+                    <strong>{{winner}}</strong> is {{ stats.results|get_winner_item:"Twitter Sentiment" }}.
+                    <strong>{{loser}}&#39s</strong> is {{ stats.results|get_loser_item:"Twitter Sentiment" }}.
+                </p>
+                <em class="small"> More extreme sentiment, regardless of whether sentiment was positive, meant higher scores, because
+                    <strong>passion.</strong>
+                </em>
+
+                <p class="row top-buffer"> Gender guesser guessed that
+                    <strong>{{winner}}</strong> is a {{ stats.results|get_winner_item:"Gender Guesser" }}, and that
+                    <strong>{{loser}}</strong> is a {{ stats.results|get_loser_item:"Gender Guesser" }}.
+                </p>
+                <em class="small"> Being a female gives you a 150% kicker because,
+                    <strong>diversity.</strong>
+                </em>
+
+                <p class="row top-buffer">
+                    <strong>{{winner}}</strong> has {{ stats.results|get_winner_item:"Thesaurus" }} synonyms and antonyms,
+                    <strong>{{loser}}</strong> has {{ stats.results|get_loser_item:"Thesaurus" }}.
+                </p>
+                <em class="small"> More thesaurus results amplified
+                    <strong>{{winner}}&#39s</strong> score, because synonyms mean
+                    <strong>ubiquity</strong>, and antonyms mean <strong>disruptive.</strong>
+                </em>
+
+                <!-- <p>
+                <strong>{{winner}}</strong> has X antonyms,
+                <strong>{{loser}}</strong> has Y.
+                </p>
+                <em class="small"> More antonyms amplified
+                <strong>{{winner}}&#39s</strong> score, because
+                <strong>disruptive.</strong>
+                </em> -->
+
+                <p class="row top-buffer"> AngelList notes {{ stats.results|get_winner_item:"Angel List" }} startups related to
+                    <strong>{{winner}}</strong>, versus {{ stats.results|get_loser_item:"Angel List" }} for
+                    <strong>{{loser}}</strong>.
+                </p>
+                </p>
+                <em class="small"> Less startups means a higher score, because
+                    <strong>market share.</strong>
+                </em>
+
+                <p class="row top-buffer"> The top 40 Google Books on the subject of
+                    <strong>{{winner}}</strong>.
+                </p>
+                <em class="small"> More pages means a higher score, because
+                    <strong>verbosity.</strong>
+                </em>
+
+                <p class="row top-buffer"> Finally,
+                    <strong>{{winner}}</strong> turns up {{ stats.results|get_winner_item:"Google Search" }} results on Google, while
+                    <strong>{{loser}}</strong> turns up only {{ stats.results|get_loser_item:"Google Search" }}.
+                </p>
+                <em class="small"> More results on Google means a higher score, because
+                    <strong>big data.</strong>
+                </em>
+            </div>
+        </section>
     </div>
-			<h2>
-        Everything you don't want to know about anything
-      </h2>
 
-
-      <form method="POST" class="input-items">
-        {% csrf_token %}
-          <input class="input-text top-buffer" name="input_left" placeholder="compare this">
-          <input class="input-text top-buffer" name="input_right" placeholder="with this">
-          <br/>
-          <input type="submit" class="top-buffer custom-btn" value="comparify">
-      </form>
-
-	</div>
-   <br/>
-  {% if status == 'success' %}
-
-  <div id="images" class="container">
-    <div class="row">
-      <div class="col-md-6">
-        <h2>{{item_left}}</h2>
-        {% if image_left %}
-          <img src="{{image_left}}">
-        {% else %}
-          Whoops! Image could not be found.
-        {% endif %}
-      </div>
-      <div class="col-md-6">
-        <h2>{{item_right}}</h2>
-        {% if image_right %}
-          <img src="{{image_right}}">
-        {% else %}
-          Whoops! Image could not be found.
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-  <div class="center" id="winner">
-    <h1>{{winner}}s are {{difference}}% better than {{loser}}s!</h1>
-      <h4>
-          <input type="button" class="custom-btn small-text" onclick="window.open('{{amazon_url}}','_blank')" value="Buy {{winner}}s on Amazon!">
-      </h4>
-  </div>
-
-  <section class="container-fluid vertical-center center">
-  <div id="results" class="lead">
-    <h2>How We Determine Worth</h2>
-
-    <p class="row top-buffer"> The Twitter sentiment for
-      <strong>{{winner}}</strong> is {{ stats.results|get_winner_item:"Twitter Sentiment" }}.
-      <strong>{{loser}}&#39s</strong> is {{ stats.results|get_loser_item:"Twitter Sentiment" }}.
-    </p>
-    <em class="small"> More extreme sentiment, regardless of whether sentiment was positive, meant higher scores, because
-      <strong>passion.</strong>
-    </em>
-
-    <p class="row top-buffer"> Gender guesser guessed that
-      <strong>{{winner}}</strong> is a {{ stats.results|get_winner_item:"Gender Guesser" }}, and that
-      <strong>{{loser}}</strong> is a {{ stats.results|get_loser_item:"Gender Guesser" }}.
-    </p>
-    <em class="small"> Being a female gives you a 150% kicker because,
-      <strong>diversity.</strong>
-    </em>
-
-    <p class="row top-buffer">
-      <strong>{{winner}}</strong> has {{ stats.results|get_winner_item:"Thesaurus" }} synonyms and antonyms,
-      <strong>{{loser}}</strong> has {{ stats.results|get_loser_item:"Thesaurus" }}.
-    </p>
-    <em class="small"> More thesaurus results amplified
-      <strong>{{winner}}&#39s</strong> score, because synonyms mean
-      <strong>ubiquity</strong>, and antonyms mean <strong>disruptive.</strong>
-    </em>
-    <!-- <p>
-      <strong>{{winner}}</strong> has X antonyms,
-      <strong>{{loser}}</strong> has Y.
-    </p>
-    <em class="small"> More antonyms amplified
-      <strong>{{winner}}&#39s</strong> score, because
-      <strong>disruptive.</strong>
-    </em> -->
-
-    <p class="row top-buffer"> AngelList notes {{ stats.results|get_winner_item:"Angel List" }} startups related to
-      <strong>{{winner}}</strong>, versus {{ stats.results|get_loser_item:"Angel List" }} for
-      <strong>{{loser}}</strong>.
-    </p>
-    </p>
-    <em class="small"> Less startups means a higher score, because
-      <strong>market share.</strong>
-    </em>
-
-    <p class="row top-buffer"> The top 40 Google Books on the subject of
-      <strong>{{winner}}</strong>.
-    </p>
-    <em class="small"> More pages means a higher score, because
-      <strong>verbosity.</strong>
-    </em>
-
-    <p class="row top-buffer"> Finally,
-      <strong>{{winner}}</strong> turns up {{ stats.results|get_winner_item:"Google Search" }} results on Google, while
-      <strong>{{loser}}</strong> turns up only {{ stats.results|get_loser_item:"Google Search" }}.
-    </p>
-    <em class="small"> More results on Google means a higher score, because
-      <strong>big data.</strong>
-    </em>
-  </div>
-  </section>
-  </div>
-
-  {% elif status == 'fail' %}
-    <h1>
-      try again! {{failure_description}}
-    </h1>
-
-  {% endif %}
+    {% elif status == 'fail' %}
+        <div class="fail container-fluid center">
+            <h2>
+                try again! {{failure_description}}
+            </h2>
+        </div>
+    {% endif %}
 </body>
 
 </html>

@@ -17,8 +17,16 @@
     border-radius: 4px;
 }
 
+.custom-btn:hover {
+    background-color: #00b1e6;
+}
+
 .small-text {
     font-size: 1em;
+}
+
+.fail {
+    text-align: center;
 }
 
 
@@ -36,6 +44,11 @@
     width: 12.5em;
     font-size: 2em;
     padding: 10px;
+}
+
+#loading {
+    margin-top: 15px;
+    display: none;
 }
 
 /* the images with titles */

@@ -31,6 +31,15 @@ def index(request):
     if request.method == "POST":
         item_left = request.POST['input_left'].title()
         item_right = request.POST['input_right'].title()
+
+        # make sure that they typed in something
+        if len(item_left) == 0 or len(item_right) == 0:
+            return render(request, 'index.html', {
+                'title': ' :(',
+                'status': 'fail',
+                'failure_description': 'please type in something to compare this time'
+            })
+
         return HttpResponseRedirect("/?left={0}&right={1}".format(item_left, item_right))
 
     # both query parameters, so proceed
